@@ -75,8 +75,8 @@ async fn main() {
     // Add CORS support
     let cors = warp::cors()
         .allow_any_origin()
-        .allow_methods(vec!['GET', 'POST', 'DELETE'])
-        .allow_headers(vec!['Content-Type']);
+        .allow_methods(vec!["GET", "POST", "DELETE"])
+        .allow_headers(vec!["Content-Type"]);
 
     let app = app.with(cors);
 
