@@ -1,11 +1,11 @@
 mod extensions;
 mod structs;
-use warp::Filter;
+
 use axum::{
     extract::{Path, State},
     http::StatusCode,
     routing::{delete, get, post},
-    Json, Router,
+    Json, Router,middleware::Cors,
 };
 use extensions::PairExt;
 use sqlite::ConnectionWithFullMutex;
@@ -71,15 +71,8 @@ async fn main() {
         .with_state(shared_state.clone())
         .route("/subtasks/:subtask_id", delete(delete_subtask))
         .with_state(shared_state.clone());
-
-    // Add CORS support
-    let cors = warp::cors()
-        .allow_any_origin()
-        .allow_methods(vec!["GET", "POST", "DELETE"])
-        .allow_headers(vec!["Content-Type"]);
-
-    let app = app.with(cors);
-
+        .layer(Cors::default().allow_any_origin());  // Add CORS middleware
+    
     // run our app with hyper
     // `axum::Server` is a re-export of `hyper::Server`
     let addr = if cfg!(debug_assertions) {
