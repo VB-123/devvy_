@@ -72,6 +72,14 @@ async fn main() {
         .route("/subtasks/:subtask_id", delete(delete_subtask))
         .with_state(shared_state.clone());
 
+    // Add CORS support
+    let cors = warp::cors()
+        .allow_any_origin()
+        .allow_methods(vec!['GET', 'POST', 'DELETE'])
+        .allow_headers(vec!['Content-Type']);
+
+    let app = app.with(cors);
+
     // run our app with hyper
     // `axum::Server` is a re-export of `hyper::Server`
     let addr = if cfg!(debug_assertions) {
